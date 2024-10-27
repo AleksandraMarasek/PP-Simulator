@@ -8,11 +8,33 @@ namespace Simulator;
 
 public class Animals
 {
-    public required string Description { get; init; }
+    private string _description = "Unknown";
+    
+    public required string Description
+    {
+        get => _description;
+        init
+        {
+            if (_description != "Unknown")
+                throw new InvalidOperationException("Description can only be set once.");
+
+            string valueTrimmed = value.Trim();
+
+            if (valueTrimmed.Length < 3)
+                valueTrimmed = valueTrimmed.PadRight(3, '#');
+
+            if (valueTrimmed.Length > 15)
+                valueTrimmed = valueTrimmed.Substring(0, 15).TrimEnd();
+
+            if (valueTrimmed.Length > 0)
+                valueTrimmed = char.ToUpper(valueTrimmed[0]) + valueTrimmed.Substring(1).ToLower();
+
+            _description = valueTrimmed;
+        }
+    }
+   
+
     public uint Size { get; set; } = 3;
 
-    public void Info()
-    {
-        Console.WriteLine($"{Description} <{Size}>");
-    }
+    public string Info => $"{Description} <{Size}>";
 }
