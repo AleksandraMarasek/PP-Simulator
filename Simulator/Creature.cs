@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Simulator;
 
 
-public class Creature
+public abstract class Creature
 {
     private string _name = "Unknown";
     private int _level = 1 ;
@@ -17,9 +17,6 @@ public class Creature
         get => _name;
         init
         {
-            if (_name != "Unknown")
-                throw new InvalidOperationException("Name can only be set once.");
-
             string trimmed = value.Trim();
 
             if (trimmed.Length < 3) 
@@ -42,29 +39,30 @@ public class Creature
             _level = value < 1 ? 1 : value > 10 ? 10 : value;
         }
     }
-   
-    public Creature() { }
 
+    public abstract int Power { get; }   
+
+    public Creature() { }
     public Creature(string name, int level =1)
     {
         Name = name;
         Level = level;
     }
 
-    public string Info => $"{Name} [{Level}]";
-   
+    
+    public abstract void SayHi();
+    public abstract string Info { get; }
+    
     public void Upgrade()
-    {
-
-        if (_level < 10)
-            _level++;
-        else if (_level > 10)
         {
-            Console.WriteLine("Maximum level reached. You can't upgrade it anymore.");
-        }
-    }
 
-    public void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
+            if (_level < 10)
+                _level++;
+            else
+                Console.WriteLine("Maximum level reached. You can't upgrade it anymore.");
+        
+        }
+
 
     public void Go(Direction direction) 
     {

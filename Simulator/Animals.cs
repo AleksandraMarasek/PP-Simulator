@@ -15,9 +15,7 @@ public class Animals
         get => _description;
         init
         {
-            if (_description != "Unknown")
-                throw new InvalidOperationException("Description can only be set once.");
-
+            
             string valueTrimmed = value.Trim();
 
             if (valueTrimmed.Length < 3)
