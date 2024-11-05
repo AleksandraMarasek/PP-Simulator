@@ -15,24 +15,27 @@ public class Animals
         get => _description;
         init
         {
+            _description = Validator.Shortener(value, 3, 15, '#');
             
-            string valueTrimmed = value.Trim();
+            //string valueTrimmed = value.Trim();
 
-            if (valueTrimmed.Length < 3)
-                valueTrimmed = valueTrimmed.PadRight(3, '#');
+            //if (valueTrimmed.Length < 3)
+                //valueTrimmed = valueTrimmed.PadRight(3, '#');
 
-            if (valueTrimmed.Length > 15)
-                valueTrimmed = valueTrimmed.Substring(0, 15).TrimEnd();
+            //if (valueTrimmed.Length > 15)
+                //valueTrimmed = valueTrimmed.Substring(0, 15).TrimEnd();
 
-            if (valueTrimmed.Length > 0)
-                valueTrimmed = char.ToUpper(valueTrimmed[0]) + valueTrimmed.Substring(1).ToLower();
+            //if (valueTrimmed.Length > 0)
+                //valueTrimmed = char.ToUpper(valueTrimmed[0]) + valueTrimmed.Substring(1).ToLower();
 
-            _description = valueTrimmed;
+            //_description = valueTrimmed;
         }
     }
    
 
     public uint Size { get; set; } = 3;
 
-    public string Info => $"{Description} <{Size}>";
+    public virtual string Info => $"{Description} <{Size}>";
+
+    public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
 }

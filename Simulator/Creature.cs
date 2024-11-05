@@ -17,31 +17,30 @@ public abstract class Creature
         get => _name;
         init
         {
-            string trimmed = value.Trim();
+            _name = Validator.Shortener(value, 3, 25, '#');
+            //przed walidatorami
+            //string trimmed = value.Trim();
 
-            if (trimmed.Length < 3) 
-                trimmed = trimmed.PadRight(3,'#');
+            //if (trimmed.Length < 3) 
+                //trimmed = trimmed.PadRight(3,'#');
 
-            if (trimmed.Length > 25)
-                trimmed = trimmed.Substring(0, 25).TrimEnd();
+            //if (trimmed.Length > 25)
+                //trimmed = trimmed.Substring(0, 25).TrimEnd();
 
-            trimmed = char.ToUpper(trimmed[0]) + trimmed.Substring(1);
+            //trimmed = char.ToUpper(trimmed[0]) + trimmed.Substring(1);
             
-            _name = trimmed;
+            //_name = trimmed;
         }
     }
 
     public int Level
     {
         get => _level;
-        init
-        {
-            _level = value < 1 ? 1 : value > 10 ? 10 : value;
-        }
+        init => _level = Validator.Limiter(value, 1, 10);     //value < 1 ? 1 : value > 10 ? 10 : value;
+        
     }
 
-    public abstract int Power { get; }   
-
+      
     public Creature() { }
     public Creature(string name, int level =1)
     {
@@ -49,6 +48,7 @@ public abstract class Creature
         Level = level;
     }
 
+    public abstract int Power { get; } 
     
     public abstract void SayHi();
     public abstract string Info { get; }
@@ -58,8 +58,8 @@ public abstract class Creature
 
             if (_level < 10)
                 _level++;
-            else
-                Console.WriteLine("Maximum level reached. You can't upgrade it anymore.");
+            //else
+                //Console.WriteLine("Maximum level reached. You can't upgrade it anymore.");
         
         }
 
@@ -83,6 +83,6 @@ public abstract class Creature
         Direction[] directions = DirectionParser.Parse(input);
         Go(directions); 
     }
-
+    public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
 }
 

@@ -16,10 +16,10 @@ public class Elf : Creature
     public int Agility
     {
         get => agility;
-        init => agility = value < 0 ? 0 : value > 10 ? 10 : value;
+        init => agility = Validator.Limiter(value, 0, 10);
     }
     
-    public Elf() { }
+    public Elf() : base() { }
     public Elf(string name, int level = 1, int agility =1) : base(name, level) 
     {
         Agility = agility;
