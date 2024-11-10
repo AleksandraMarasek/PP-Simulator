@@ -6,67 +6,55 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Lab4a();
-        Lab4b();
+        lab5a();
     }
 
 
-    static void Lab4a()
+    
+    static void lab5a()
     {
-        Console.WriteLine("HUNT TEST\n");
-        var o = new Orc() { Name = "Gorbag", Rage = 7 };
-        o.SayHi();
-        for (int i = 0; i < 10; i++)
+        //Point p = new(10, 25);
+        //Console.WriteLine(p.Next(Direction.Right));          // (11, 25)
+        //Console.WriteLine(p.NextDiagonal(Direction.Right));  // (11, 24)
+
+        Console.WriteLine("Poprawne tworzenie prostokątów:");
+        Rectangle r1 = new(13, 12, 17, 20);     // (13,12):(17,20)
+        Console.WriteLine(r1);
+        Rectangle r2 = new(3, 8, 2, 4);     // (2,4):(3,8) ,współrzędne powinny zamienić się miejscami
+        Console.WriteLine(r2);
+
+
+        Console.WriteLine("\nKonstruktor wykorzystujący Point:");
+        Point p1 = new(1, 2);
+        Point p2 = new(2, 4);
+        Rectangle r3 = new(p1, p2);     // (1,2):(2,4)
+        Console.WriteLine(r3);
+        Rectangle r4 = new(p2, p1);     // (1,2):(2,4)
+        Console.WriteLine(r4);
+
+
+        Console.WriteLine("\nWspółrzędne współliniowe:");
+        try
         {
-            o.Hunt();
-            o.SayHi();
+            Rectangle r5 = new(0, 1, 0, 5);
+            Console.WriteLine(r5);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);      //"nie chcemy "chudych" prostokątów"
         }
 
-        Console.WriteLine("\nSING TEST\n");
-        var e = new Elf("Legolas", agility: 2);
-        e.SayHi();
-        for (int i = 0; i < 10; i++)
+        Rectangle r6 = new(0, 0, 10, 10);
+        Console.Write("\nSprawdzanie, czy punkt znajduje się w prostokącie:\n");
+        Point[] punkty =
+            [
+            new (4,6+1), new(-1,3), new(11,11), new(0,0), new(6+5,4)       //True,False,False,True,False
+            ];
+        foreach (Point i in punkty)
         {
-            e.Sing();
-            e.SayHi();
+            Console.WriteLine($"{r6.Contains(i)}");
         }
-
-        Console.WriteLine("\nPOWER TEST\n");
-        Creature[] creatures = {
-        o,
-        e,
-        new Orc("Morgash", 3, 8),
-        new Elf("Elandor", 5, 3)
-    };
-        foreach (Creature creature in creatures)
-        {
-            Console.WriteLine($"{creature.Name,-15}: {creature.Power}");
-        }
-
-
-        Creature c = new Elf("Elandor", 5, 3);
-        Console.WriteLine(c);  // ELF: Elandor [5][3]
     }
-
-    static void Lab4b()
-    {
-        object[] myObjects = {
-        new Animals() { Description = "dogs"},
-        new Birds { Description = "  eagles ", Size = 10 },
-        new Elf("e", 15, -3),
-        new Orc("morgash", 6, 4)
-    };
-        Console.WriteLine("\nMy objects:");
-        foreach (var o in myObjects) Console.WriteLine(o);
-        /*
-            My objects:
-            ANIMALS: Dogs <3>
-            BIRDS: Eagles (fly+) <10>
-            ELF: E## [10][0]
-            ORC: Morgash [6][4]
-        */
-    }
-
 }
 
 
