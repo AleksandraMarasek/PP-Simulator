@@ -26,7 +26,7 @@ public readonly struct Point
         
     }
 
-    // rotate given direction 45 degrees clockwise
+    // obraca dany kierunek o dodatkowe 45 stopni wg ruchu wskazówek zegara
     public Point NextDiagonal(Direction direction)
     {
         return direction switch
