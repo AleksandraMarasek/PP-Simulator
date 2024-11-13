@@ -50,7 +50,7 @@ public abstract class Creature
 
     public abstract int Power { get; } 
     
-    public abstract void SayHi();
+    public abstract string Greeting();
     public abstract string Info { get; }
     
     public void Upgrade()
@@ -64,24 +64,24 @@ public abstract class Creature
         }
 
 
-    public void Go(Direction direction) 
+    public string Go(Direction direction) => 
+        $"{direction.ToString().ToLower()}.";
+
+
+    public string[] Go(Direction[] directions)
     {
-        string directionString = direction.ToString().ToLower();
-        
-        Console.WriteLine($"{Name} goes {directionString}.");
-    }
-    public void Go(Direction[] directions)
-    {
-        foreach (var direction in directions)
+        var result = new string[directions.Length];
+        for (int i = 0; i < directions.Length; i++)
         {
-            Go(direction);
+            result[i]= Go(directions[i]);
         }
+        return result;
     }
 
-    public void Go(string input)
+    public string[] Go(string input)
     {
         Direction[] directions = DirectionParser.Parse(input);
-        Go(directions); 
+        return Go(directions); 
     }
     public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
 }
