@@ -7,28 +7,29 @@ using System.Threading.Tasks;
 
 namespace Simulator.Maps;
 
-public class SmallSquareMap : Map
+public class SmallSquareMap : SmallMap
 {
     
     public int Size { get; }
+
     
-    public SmallSquareMap(int size)  
+    public SmallSquareMap(int size)  : base(size,size)
     {
-        if (size<5 || size>20) throw new ArgumentOutOfRangeException("Zły rozmiar mapy!");
-        Size = size;
-        _map = new Rectangle(0, 0, Size - 1, Size - 1);
+        
+        
     }
-    private readonly Rectangle _map;
-    public override bool Exist(Point p) => _map.Contains(p); 
+    
+    //public override bool Exist(Point p) => _map.Contains(p); 
 
     public override Point Next(Point p, Direction d)
     {
-
-        if (_map.Contains(p.Next(d))) { return p.Next(d); } return p;
+        var moved = p.Next(d);
+        return Exist(moved) ? moved : p;
     }
 
     public override Point NextDiagonal(Point p, Direction d)
     {
-        if (_map.Contains(p.NextDiagonal(d))) { return p.NextDiagonal(d); } return p;
+        var moved = p.NextDiagonal(d);
+        return Exist(moved) ? moved : p;
     }
 }
