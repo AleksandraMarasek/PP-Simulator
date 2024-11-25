@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Simulator.Maps;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,9 @@ namespace Simulator;
 
 public abstract class Creature
 {
+    public Map? Map { get; private set; }
+    public Point Position { get; private set; }
+
     private string _name = "Unknown";
     private int _level = 1 ;
 
@@ -18,18 +22,6 @@ public abstract class Creature
         init
         {
             _name = Validator.Shortener(value, 3, 25, '#');
-            //przed walidatorami
-            //string trimmed = value.Trim();
-
-            //if (trimmed.Length < 3) 
-                //trimmed = trimmed.PadRight(3,'#');
-
-            //if (trimmed.Length > 25)
-                //trimmed = trimmed.Substring(0, 25).TrimEnd();
-
-            //trimmed = char.ToUpper(trimmed[0]) + trimmed.Substring(1);
-            
-            //_name = trimmed;
         }
     }
 
@@ -49,40 +41,38 @@ public abstract class Creature
     }
 
     public abstract int Power { get; } 
-    
     public abstract string Greeting();
     public abstract string Info { get; }
     
     public void Upgrade()
         {
-
-            if (_level < 10)
-                _level++;
-            //else
-                //Console.WriteLine("Maximum level reached. You can't upgrade it anymore.");
-        
+            if (_level < 10) _level++;
         }
 
-
-    public string Go(Direction direction) => 
-        $"{direction.ToString().ToLower()}.";
-
-
-    public string[] Go(Direction[] directions)
+    public void InitMapAndPosition(Map map, Point position)
     {
-        var result = new string[directions.Length];
-        for (int i = 0; i < directions.Length; i++)
-        {
-            result[i]= Go(directions[i]);
-        }
-        return result;
+        if (map == null) throw new ArgumentNullException(nameof(map));
+        if (!map.Exist(position)) throw new ArgumentOutOfRangeException(nameof(position), "Position is out of bounds");
+
+        Map = map;
+        Position = position;
+        Map.Add(this, position);
     }
 
-    public string[] Go(string input)
+    public string Go(Direction direction)
     {
-        Direction[] directions = DirectionParser.Parse(input);
-        return Go(directions); 
+        if (Map == null) throw new InvalidOperationException("The creature can't move while not being on the map.");
+        var move= Map.Next(Position,direction);
+
+        Map.Move(this, Position, move);
+        Position = move;
+
+        return $"{Name} goes {direction.ToString().ToLower()}.";
     }
-    public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
+
+    public override string ToString()
+    {
+        return $"{GetType().Name.ToUpper()}: {Info}";
+    }
 }
 

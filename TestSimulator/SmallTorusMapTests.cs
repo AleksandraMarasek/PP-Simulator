@@ -14,12 +14,13 @@ public class SmallTorusMapTests
     [Fact]
     public void Constructor_ValidSize_ShouldSetSize()
     {
-        // Arrange
+        
         int size = 10;
-        // Act
-        var map = new SmallTorusMap(size);
-        // Assert
-        Assert.Equal(size, map.Size);
+        
+        var map = new SmallTorusMap(size,size);
+        
+        Assert.Equal(size, map.SizeX);
+        Assert.Equal(size, map.SizeY);
     }
 
     [Theory]

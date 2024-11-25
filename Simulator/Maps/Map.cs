@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,21 +15,33 @@ public abstract class Map
 {
     private readonly Rectangle _map;
 
+
     public int SizeX { get; }
     public int SizeY { get; }
     protected Map(int sizeX, int sizeY) 
+        {
+            if (sizeX < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow");
+            if (sizeY < 5) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too short");
+
+            SizeX = sizeX;
+            SizeY = sizeY;
+
+            _map = new Rectangle(0, 0, SizeX - 1, SizeY - 1);
+        }
+
+    public abstract void Add(Creature creature, Point position);
+    public abstract void Remove(Creature creature,  Point position);
+    public void Move(Creature creature, Point _from, Point to) 
     {
-        if (sizeX < 5) throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow");
-        if (sizeY < 5) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too short");
-
-        SizeX = sizeX;
-        SizeY = sizeY;
-
-        _map = new Rectangle(0, 0, SizeX - 1, SizeY - 1);
+        Add(creature, to);
+        Remove(creature, _from);
     }
 
+    public abstract List<Creature> At(int x, int y);
+    public abstract List<Creature> At(Point p);
 
-    public virtual bool Exist(Point p) => _map.Contains(p);
+
+
     
     /// <summary>
     /// Check if give point belongs to the map.
@@ -36,6 +49,7 @@ public abstract class Map
     /// <param name="p">Point to check.</param>
     /// <returns></returns>
     //public abstract bool Exist(Point p);
+    public virtual bool Exist(Point p) => _map.Contains(p);
 
     /// <summary>
     /// Next position to the point in a given direction.
