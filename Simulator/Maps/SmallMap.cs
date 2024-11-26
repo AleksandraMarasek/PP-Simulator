@@ -16,6 +16,13 @@ public abstract class SmallMap : Map
         if (sizeY > 20) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too high");
 
         _fields = new List<Creature>?[sizeX, sizeY];
+        for (int i = 0; i < sizeX; i++)
+        {
+            for (int j = 0; j < sizeY; j++)
+            {
+                _fields[i, j] = new List<Creature>();
+            }
+        }
     }
     public override void Add(Creature creature, Point position)
     {

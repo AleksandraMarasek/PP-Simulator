@@ -56,7 +56,7 @@ public abstract class Creature
 
         Map = map;
         Position = position;
-        Map.Add(this, position);
+        map.Add(this, position);
     }
 
     public string Go(Direction direction)

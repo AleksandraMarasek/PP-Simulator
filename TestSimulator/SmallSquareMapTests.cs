@@ -20,6 +20,7 @@ public class SmallSquareMapTests
         var map = new SmallSquareMap(size);
 
         Assert.Equal(size, map.SizeX);
+        Assert.Equal(size, map.SizeY);
 
     }
 

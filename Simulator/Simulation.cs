@@ -84,14 +84,10 @@ public class Simulation
         if (Finished)
             throw new InvalidOperationException("Simulation is finished.");
 
-
         var direction = DirectionParser.Parse(Moves[_currentTurn % Moves.Length].ToString())[0];
         CurrentCreature.Go(direction);
-
-        CurrentCreature.Go(direction);
-
+        //CurrentCreature.Go(direction);
         _currentTurn++;
-
         if (_currentTurn >= Moves.Length)
             Finished = true;
 
