@@ -13,8 +13,8 @@ internal class Program
     {
         Console.OutputEncoding = Encoding.UTF8;
 
-        SmallSquareMap map = new(7);
-        List<Creature> creatures = [new Orc("Gorbag"), new Elf("Elandor"), new Elf("Ann")];
+        SmallSquareMap map = new(10);
+        List<IMappable> creatures = [new Orc("Gorbag"), new Elf("Elandor"), new Elf("Ann")];
         List<Point> points = [new(2, 2), new(3, 1), new(1,1)];
         string moves = "dlrludlluur";
 
@@ -39,7 +39,7 @@ internal class Program
 
                 
                 Console.Clear();
-                Console.WriteLine($"Move: {simulation.CurrentMoveName}, Creature: {simulation.CurrentCreature.Name}");
+                Console.WriteLine($"Move: {simulation.CurrentMoveName}, Creature: {simulation.CurrentIMappable.Name}");
                 mapVisualizer.Draw();
             }
             catch (InvalidOperationException ex)

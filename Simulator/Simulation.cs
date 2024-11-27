@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,21 +17,21 @@ public class Simulation
     public Map Map { get; }
 
     /// <summary>
-    /// Creatures moving on the map.
+    /// IMappables moving on the map.
     /// </summary>
-    public List<Creature> Creatures { get; }
+    public List<IMappable> IMappables { get; }
 
     /// <summary>
-    /// Starting positions of creatures.
+    /// Starting positions of mappables.
     /// </summary>
     public List<Point> Positions { get; }
 
     /// <summary>
-    /// Cyclic list of creatures moves. 
+    /// Cyclic list of mappables moves. 
     /// Bad moves are ignored - use DirectionParser.
-    /// First move is for first creature, second for second and so on.
-    /// When all creatures make moves, 
-    /// next move is again for first creature and so on.
+    /// First move is for first mappable, second for second and so on.
+    /// When all mappables make moves, 
+    /// next move is again for first mappable and so on.
     /// </summary>
     public string Moves { get; }
 
@@ -38,45 +39,51 @@ public class Simulation
     /// Has all moves been done?
     /// </summary>
     public bool Finished = false;
-
+    //private List<Direction> DirectionParser { get; }
+    
 
     private int _currentTurn = 0;
     /// <summary>
-    /// Creature which will be moving current turn.
+    /// IMappable which will be moving current turn.
     /// </summary>
-    public Creature CurrentCreature { get => Creatures[_currentTurn % Creatures.Count ]; }
+    public IMappable CurrentIMappable { get => IMappables[_currentTurn % IMappables.Count ]; }
 
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
     /// </summary>
+    /// 
+
+
+    //================================================================POPRAWKI==========================================================================
+    //zrób listę poprawnych ruchów i popraw, żeby filtrowało złe znaki i zostawiało w stringu tylko poprawne tzn l r u d
     public string CurrentMoveName { get => DirectionParser.Parse(Moves[_currentTurn%Moves.Length].ToString()).ToString().ToLower(); }
 
     /// <summary>
     /// Simulation constructor.
     /// Throw errors:
-    /// if creatures' list is empty,
-    /// if number of creatures differs from 
+    /// if mappables' list is empty,
+    /// if number of mappables differs from 
     /// number of starting positions.
     /// </summary>
-    public Simulation(Map map, List<Creature> creatures, List<Point> positions, string moves)
+    public Simulation(Map map, List<IMappable> mappables, List<Point> positions, string moves)
     { 
-        if (creatures == null || creatures.Count == 0) throw new ArgumentException("The list of creatures cannot be empty.", nameof(positions));
-        if (positions == null || positions.Count != creatures.Count) throw new ArgumentException("Number of starting positions must be the same as the number of creatures.", nameof(positions));
+        if (mappables == null || mappables.Count == 0) throw new ArgumentException("The list of mappables cannot be empty.", nameof(positions));
+        if (positions == null || positions.Count != mappables.Count) throw new ArgumentException("Number of starting positions must be the same as the number of mappables.", nameof(positions));
         if (string.IsNullOrEmpty(moves)) throw new ArgumentException("Moves string cannot be null or empty.", nameof(moves));
 
         Map = map ?? throw new ArgumentNullException(nameof(map));
-        Creatures = creatures;
+        IMappables = mappables;
         Positions = positions;
         Moves = moves.ToLower();
 
-        for (int i = 0; i < creatures.Count; i++)
+        for (int i = 0; i < mappables.Count; i++)
         {
-            creatures[i].InitMapAndPosition(map, positions[i]);
+            mappables[i].InitMapAndPosition(map, positions[i]);
         }
     }
 
     /// <summary>
-    /// Makes one move of current creature in current direction.
+    /// Makes one move of current mappable in current direction.
     /// Throw error if simulation is finished.
     /// </summary>
     public void Turn() 
@@ -85,8 +92,8 @@ public class Simulation
             throw new InvalidOperationException("Simulation is finished.");
 
         var direction = DirectionParser.Parse(Moves[_currentTurn % Moves.Length].ToString())[0];
-        CurrentCreature.Go(direction);
-        //CurrentCreature.Go(direction);
+        CurrentIMappable.Go(direction);
+        //CurrentIMappable.Go(direction);
         _currentTurn++;
         if (_currentTurn >= Moves.Length)
             Finished = true;

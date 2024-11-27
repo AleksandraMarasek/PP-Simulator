@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace Simulator.Maps;
 
@@ -29,16 +23,16 @@ public abstract class Map
             _map = new Rectangle(0, 0, SizeX - 1, SizeY - 1);
         }
 
-    public abstract void Add(Creature creature, Point position);
-    public abstract void Remove(Creature creature,  Point position);
-    public void Move(Creature creature, Point _from, Point to) 
+    public abstract void Add(IMappable mappable, Point position);
+    public abstract void Remove(IMappable mappable,  Point position);
+    public void Move(IMappable mappable, Point _from, Point to) 
     {
-        Add(creature, to);
-        Remove(creature, _from);
+        Add(mappable, to);
+        Remove(mappable, _from);
     }
 
-    public abstract List<Creature> At(int x, int y);
-    public abstract List<Creature> At(Point p);
+    public abstract List<IMappable> At(int x, int y);
+    public abstract List<IMappable> At(Point p);
 
 
 

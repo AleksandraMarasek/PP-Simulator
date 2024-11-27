@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Simulator;
 
 
-public abstract class Creature
+public abstract class Creature : IMappable
 {
     public Map? Map { get; private set; }
     public Point Position { get; private set; }
@@ -43,7 +43,8 @@ public abstract class Creature
     public abstract int Power { get; } 
     public abstract string Greeting();
     public abstract string Info { get; }
-    
+    object IMappable.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     public void Upgrade()
         {
             if (_level < 10) _level++;
@@ -59,7 +60,7 @@ public abstract class Creature
         map.Add(this, position);
     }
 
-    public string Go(Direction direction)
+    public void Go(Direction direction)
     {
         if (Map == null) throw new InvalidOperationException("The creature can't move while not being on the map.");
         var move= Map.Next(Position,direction);
@@ -67,12 +68,17 @@ public abstract class Creature
         Map.Move(this, Position, move);
         Position = move;
 
-        return $"{Name} goes {direction.ToString().ToLower()}.";
+        //return $"{Name} goes {direction.ToString().ToLower()}.";
     }
 
     public override string ToString()
     {
         return $"{GetType().Name.ToUpper()}: {Info}";
+    }
+
+    void IMappable.Go(Direction direction)
+    {
+        throw new NotImplementedException();
     }
 }
 
