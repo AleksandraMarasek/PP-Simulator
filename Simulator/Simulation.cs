@@ -46,17 +46,21 @@ public class Simulation
     /// <summary>
     /// IMappable which will be moving current turn.
     /// </summary>
-    public IMappable CurrentIMappable { get => IMappables[_currentTurn % IMappables.Count ]; }
+    public IMappable CurrentIMappable => IMappables[_currentTurn % IMappables.Count ]; 
 
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
     /// </summary>
     /// 
 
-
-    //================================================================POPRAWKI==========================================================================
-    //zrób listę poprawnych ruchów i popraw, żeby filtrowało złe znaki i zostawiało w stringu tylko poprawne tzn l r u d
-    public string CurrentMoveName { get => DirectionParser.Parse(Moves[_currentTurn%Moves.Length].ToString()).ToString().ToLower(); }
+    public string CurrentMoveName
+    {
+        get
+        {
+            char move = Moves[_currentTurn % Moves.Length];
+            return move.ToString();
+        }
+    }
 
     /// <summary>
     /// Simulation constructor.
@@ -74,7 +78,10 @@ public class Simulation
         Map = map ?? throw new ArgumentNullException(nameof(map));
         IMappables = mappables;
         Positions = positions;
-        Moves = moves.ToLower();
+        //Moves = moves.ToLower();
+        Moves = new string(moves.Where(ch => "lrud".Contains(char.ToLower(ch))).ToArray());
+        if (Moves.Length == 0)
+            throw new ArgumentException("Moves string must contain at least one valid move ('l', 'r', 'u', 'd').");
 
         for (int i = 0; i < mappables.Count; i++)
         {
@@ -91,9 +98,8 @@ public class Simulation
         if (Finished)
             throw new InvalidOperationException("Simulation is finished.");
 
-        var direction = DirectionParser.Parse(Moves[_currentTurn % Moves.Length].ToString())[0];
+        var direction = DirectionParser.Parse(CurrentMoveName)[0];
         CurrentIMappable.Go(direction);
-        //CurrentIMappable.Go(direction);
         _currentTurn++;
         if (_currentTurn >= Moves.Length)
             Finished = true;

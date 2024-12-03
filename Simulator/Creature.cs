@@ -43,8 +43,7 @@ public abstract class Creature : IMappable
     public abstract int Power { get; } 
     public abstract string Greeting();
     public abstract string Info { get; }
-    object IMappable.Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+    
     public void Upgrade()
         {
             if (_level < 10) _level++;
@@ -78,7 +77,12 @@ public abstract class Creature : IMappable
 
     void IMappable.Go(Direction direction)
     {
-        throw new NotImplementedException();
+        this.Go(direction);
+    }
+    object IMappable.Name 
+    { 
+        get => Name; 
+        set => throw new NotImplementedException();
     }
 }
 

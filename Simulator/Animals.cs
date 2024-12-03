@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Simulator.Maps;
+
 
 namespace Simulator;
 
-public class Animals
+public class Animals : IMappable
 {
     private string _description = "Unknown";
     
@@ -36,6 +33,18 @@ public class Animals
     public uint Size { get; set; } = 3;
 
     public virtual string Info => $"{Description} <{Size}>";
+
+    public object Name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+    public void Go(Direction direction)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void InitMapAndPosition(Map map, Point point)
+    {
+        throw new NotImplementedException();
+    }
 
     public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
 }
