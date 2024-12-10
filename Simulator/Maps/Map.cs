@@ -1,6 +1,4 @@
-﻿
-
-namespace Simulator.Maps;
+﻿namespace Simulator.Maps;
 
 /// <summary>
 /// Map of points.
@@ -8,8 +6,6 @@ namespace Simulator.Maps;
 public abstract class Map
 {
     private readonly Rectangle _map;
-
-
     public int SizeX { get; }
     public int SizeY { get; }
     protected Map(int sizeX, int sizeY) 
@@ -25,11 +21,7 @@ public abstract class Map
 
     public abstract void Add(IMappable mappable, Point position);
     public abstract void Remove(IMappable mappable,  Point position);
-    public void Move(IMappable mappable, Point _from, Point to) 
-    {
-        Add(mappable, to);
-        Remove(mappable, _from);
-    }
+    public abstract void Move(IMappable mappable, Point _from, Point _to);
 
     public abstract List<IMappable> At(int x, int y);
     public abstract List<IMappable> At(Point p);

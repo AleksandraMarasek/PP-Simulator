@@ -12,6 +12,8 @@ public class Orc : Creature
     private int rage = 1;
     private int huntCtr = 0;
 
+    public override char Symbol => 'O';
+
     public int Rage
     {
         get => rage;
@@ -29,7 +31,6 @@ public class Orc : Creature
 
     public void Hunt()
     {
-        //Console.WriteLine($"{Name} is hunting.");
         huntCtr++;
         if (huntCtr % 3 == 0 && rage < 10) rage++;
     }

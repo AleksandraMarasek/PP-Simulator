@@ -38,15 +38,15 @@ public class Simulation
     /// <summary>
     /// Has all moves been done?
     /// </summary>
-    public bool Finished = false;
-    //private List<Direction> DirectionParser { get; }
     
+    private List<Direction> DirectionsParsed { get; }
 
+    public bool Finished = false;
     private int _currentTurn = 0;
     /// <summary>
     /// IMappable which will be moving current turn.
     /// </summary>
-    public IMappable CurrentIMappable => IMappables[_currentTurn % IMappables.Count ]; 
+    public IMappable CurrentMappable => IMappables[_currentTurn % IMappables.Count ]; 
 
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
@@ -55,11 +55,7 @@ public class Simulation
 
     public string CurrentMoveName
     {
-        get
-        {
-            char move = Moves[_currentTurn % Moves.Length];
-            return move.ToString();
-        }
+        get => DirectionsParsed[_currentTurn % DirectionsParsed.Count].ToString().ToLower();
     }
 
     /// <summary>
@@ -78,10 +74,12 @@ public class Simulation
         Map = map ?? throw new ArgumentNullException(nameof(map));
         IMappables = mappables;
         Positions = positions;
-        //Moves = moves.ToLower();
-        Moves = new string(moves.Where(ch => "lrud".Contains(char.ToLower(ch))).ToArray());
-        if (Moves.Length == 0)
-            throw new ArgumentException("Moves string must contain at least one valid move ('l', 'r', 'u', 'd').");
+
+        Moves = moves;
+        DirectionsParsed = ValidateMoves(moves);
+
+
+
 
         for (int i = 0; i < mappables.Count; i++)
         {
@@ -98,11 +96,21 @@ public class Simulation
         if (Finished)
             throw new InvalidOperationException("Simulation is finished.");
 
-        var direction = DirectionParser.Parse(CurrentMoveName)[0];
-        CurrentIMappable.Go(direction);
+        var direction = DirectionsParsed[_currentTurn % DirectionsParsed.Count];
+        CurrentMappable.Go(direction);
         _currentTurn++;
-        if (_currentTurn >= Moves.Length)
+        if (_currentTurn >= DirectionsParsed.Count)
             Finished = true;
 
     }
+
+    private List<Direction> ValidateMoves(string moves)
+    {
+        return moves
+            .Where(c => "urdl".Contains(char.ToLower(c))) // Filtruj tylko poprawne znaki ruchów
+            .Select(c => DirectionParser.Parse(c.ToString()).FirstOrDefault()) // Parsuj je do Direction
+            .Where(d => d != default(Direction)) // Usuń potencjalne null/invalid
+            .ToList();
+    }
+
 }

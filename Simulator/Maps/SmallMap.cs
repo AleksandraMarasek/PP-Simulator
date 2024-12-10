@@ -16,39 +16,33 @@ public abstract class SmallMap : Map
         if (sizeY > 20) throw new ArgumentOutOfRangeException(nameof(sizeY), "Too high");
 
         _fields = new List<IMappable>?[sizeX, sizeY];
-        for (int i = 0; i < sizeX; i++)
-        {
-            for (int j = 0; j < sizeY; j++)
-            {
-                _fields[i, j] = new List<IMappable>();
-            }
-        }
     }
     public override void Add(IMappable mappable, Point position)
     {
-        _fields[position.X,position.Y]?.Add(mappable);
+        if (_fields[position.X, position.Y] == null)
+            _fields[position.X, position.Y] = new List<IMappable>();
+        _fields[position.X, position.Y].Add(mappable);
+        //_fields[position.X, position.Y] ??= new List<IMappable>();
+        //_fields[position.X, position.Y].Add(mappable);
     }
 
     public override void Remove(IMappable mappable, Point position)
     {
-        _fields[position.X, position.Y]?.Remove(mappable);
+        if (_fields[position.X, position.Y] != null)
+            _fields[position.X, position.Y].Remove(mappable);
+        //_fields[position.X, position.Y]?.Remove(mappable);
     }
 
-    public override List<IMappable> At(int x, int y)
+    public override void Move(IMappable mappable, Point _from, Point _to)
     {
-        return _fields[x, y];
+        Remove(mappable, _from);
+        Add(mappable, _to);
     }
+
+    public override List<IMappable> At(int x, int y) =>  At(new Point(x, y));
 
     public override List<IMappable> At(Point p)
     {
         return _fields[p.X, p.Y];
     }
-
-
-    
-
-
-    
-
-
 }

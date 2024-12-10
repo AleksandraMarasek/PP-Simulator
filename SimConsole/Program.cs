@@ -11,45 +11,41 @@ internal class Program
 {
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
+        Console.WriteLine("Starting simulation!");
 
-        SmallSquareMap map = new(10);
-        List<IMappable> creatures = [new Orc("Gorbag"), new Elf("Elandor"), new Elf("Ann")];
-        List<Point> points = [new(2, 2), new(3, 1), new(1,1)];
-        string moves = "dlrludlluur";
+        BigBounceMap map = new(8, 6);
+        List<IMappable> creatures = 
+            [new Orc("Gorbag"),
+            new Elf("Elandor"),
+            new Animals() { Description = "Króliki", Size = 7 },
+            new Birds() { Description = "Orły", Size = 2 },
+            new Birds() { Description = "Strusie", CanFly = false }];
+
+        List<Point> points =
+            [new(1,2),
+            new(1,1),
+            new(1,3),
+            new(5,4),
+            new(5,3)];
+        string moves = "llllulludddlrdlrulr";
+
 
         Simulation simulation = new(map, creatures, points, moves);
-        MapVisualizer mapVisualizer = new MapVisualizer(map);
+        MapVisualizer mapVisualizer = new(simulation.Map);
+
+        var turn = 1;
         mapVisualizer.Draw();
-
-        Console.WriteLine("SIMULATION");
-        Console.WriteLine("Starting positions:");
-
 
         while (!simulation.Finished)
         {
-        
-            Console.WriteLine("Press any key to make a move...");
-            Console.ReadKey(true);
+            Console.ReadKey(intercept: true);
+            Console.WriteLine($"Turn {turn}");
+            Console.WriteLine($"{simulation.CurrentMappable} goes {simulation.CurrentMoveName}");
 
-            try
-            {
-               
-                simulation.Turn();
+            simulation.Turn();
+            mapVisualizer.Draw();
+            turn++;
 
-                
-                Console.Clear();
-                Console.WriteLine($"Move: {simulation.CurrentMoveName}, Creature: {simulation.CurrentIMappable.Name}");
-                mapVisualizer.Draw();
-            }
-            catch (InvalidOperationException ex)
-            {
-                
-                Console.WriteLine($"Simulation error: {ex.Message}");
-                break;
-            }
         }
-
-        Console.WriteLine("Simulation is finished!");
     }
 }

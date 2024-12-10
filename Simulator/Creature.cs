@@ -15,6 +15,7 @@ public abstract class Creature : IMappable
 
     private string _name = "Unknown";
     private int _level = 1 ;
+    public virtual char Symbol => 'C';
 
     public string Name
     {
@@ -52,7 +53,8 @@ public abstract class Creature : IMappable
     public void InitMapAndPosition(Map map, Point position)
     {
         if (map == null) throw new ArgumentNullException(nameof(map));
-        if (!map.Exist(position)) throw new ArgumentOutOfRangeException(nameof(position), "Position is out of bounds");
+        if (Map != null) throw new InvalidOperationException($"This creature is already on a map.");
+        if (!map.Exist(position)) throw new ArgumentOutOfRangeException(nameof(position), "Position is not on the map.");
 
         Map = map;
         Position = position;
@@ -67,7 +69,7 @@ public abstract class Creature : IMappable
         Map.Move(this, Position, move);
         Position = move;
 
-        //return $"{Name} goes {direction.ToString().ToLower()}.";
+        
     }
 
     public override string ToString()
@@ -75,14 +77,6 @@ public abstract class Creature : IMappable
         return $"{GetType().Name.ToUpper()}: {Info}";
     }
 
-    void IMappable.Go(Direction direction)
-    {
-        this.Go(direction);
-    }
-    object IMappable.Name 
-    { 
-        get => Name; 
-        set => throw new NotImplementedException();
-    }
+    
 }
 
