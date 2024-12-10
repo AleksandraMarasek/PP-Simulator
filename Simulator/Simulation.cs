@@ -1,11 +1,5 @@
 ﻿using Simulator.Maps;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Simulator;
 
@@ -38,7 +32,7 @@ public class Simulation
     /// <summary>
     /// Has all moves been done?
     /// </summary>
-    
+
     private List<Direction> DirectionsParsed { get; }
 
     public bool Finished = false;
@@ -46,7 +40,7 @@ public class Simulation
     /// <summary>
     /// IMappable which will be moving current turn.
     /// </summary>
-    public IMappable CurrentMappable => IMappables[_currentTurn % IMappables.Count ]; 
+    public IMappable CurrentMappable => IMappables[_currentTurn % IMappables.Count];
 
     /// <summary>
     /// Lowercase name of direction which will be used in current turn.
@@ -57,6 +51,9 @@ public class Simulation
     {
         get => DirectionsParsed[_currentTurn % DirectionsParsed.Count].ToString().ToLower();
     }
+
+
+    public SimulationHistory History { get; }
 
     /// <summary>
     /// Simulation constructor.
@@ -74,17 +71,21 @@ public class Simulation
         Map = map ?? throw new ArgumentNullException(nameof(map));
         IMappables = mappables;
         Positions = positions;
-
         Moves = moves;
         DirectionsParsed = ValidateMoves(moves);
-
-
-
-
+        History = new SimulationHistory();
+        
         for (int i = 0; i < mappables.Count; i++)
         {
             mappables[i].InitMapAndPosition(map, positions[i]);
         }
+
+        History.SaveCurrentTurn(
+            _currentTurn,
+            IMappables.ToDictionary(m => m, m => m.Position),
+            null,
+            null
+        );
     }
 
     /// <summary>
@@ -98,7 +99,16 @@ public class Simulation
 
         var direction = DirectionsParsed[_currentTurn % DirectionsParsed.Count];
         CurrentMappable.Go(direction);
+
+        History.SaveCurrentTurn(
+            _currentTurn,
+            IMappables.ToDictionary(m => m, m => m.Position),
+            CurrentMappable,
+            direction
+        );
+
         _currentTurn++;
+
         if (_currentTurn >= DirectionsParsed.Count)
             Finished = true;
 
@@ -107,10 +117,15 @@ public class Simulation
     private List<Direction> ValidateMoves(string moves)
     {
         return moves
-            .Where(c => "urdl".Contains(char.ToLower(c))) // Filtruj tylko poprawne znaki ruchów
-            .Select(c => DirectionParser.Parse(c.ToString()).FirstOrDefault()) // Parsuj je do Direction
-            .Where(d => d != default(Direction)) // Usuń potencjalne null/invalid
+            .Where(c => "urdl".Contains(char.ToLower(c)))
+            .Select(c => DirectionParser.Parse(c.ToString()).FirstOrDefault()) 
+            .Where(d => d != default(Direction)) 
             .ToList();
+    }
+
+    public void ShowTurns(List<int> turns)
+    {
+        History.ShowSpecificTurns(turns);
     }
 
 }
