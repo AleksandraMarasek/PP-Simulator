@@ -50,7 +50,7 @@ internal class Program
             turn++;
 
         }
-        simulation.ShowTurns(new List<int> { 5, 10, 15, 20,0 });
+        simulation.ShowTurns(new List<int> { 5, 10, 15, 20 });
 
     }
 }

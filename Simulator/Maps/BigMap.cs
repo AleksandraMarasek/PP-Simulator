@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Simulator.Maps;
+﻿namespace Simulator.Maps;
 
 public abstract class BigMap : Map 
 {
@@ -17,39 +11,15 @@ public abstract class BigMap : Map
 
         _fields = new Dictionary<Point, List<IMappable>>();
     }
-    public override void Add(IMappable mappable, Point position)
+
+    public override Point Next(Point p, Direction d)
     {
-        if (!_fields.ContainsKey(position)){ _fields[position] = new List<IMappable>(); }
-        _fields[position].Add(mappable);
-        //mappable.InitMapAndPosition(this, position);
+        throw new NotImplementedException();
     }
 
-    public override void Remove(IMappable mappable, Point position)
+    public override Point NextDiagonal(Point p, Direction d)
     {
-        _fields[position].Remove(mappable);
-    }
-
-    public override List<IMappable> At(int x, int y)
-    {
-        var p = new Point(x , y);
-        if (_fields.ContainsKey(p))
-        {
-            return _fields[p];
-        }
-        return new List<IMappable>();
-
-    }
-
-    public override List<IMappable> At(Point p)
-    {
-        if (_fields.ContainsKey(p)) { return _fields[p]; }
-        return new List<IMappable>();
-    }
-
-    public override void Move(IMappable mappable, Point p, Point pn)
-    {
-        Remove(mappable, p);
-        Add(mappable, pn);
+        throw new NotImplementedException();
     }
 }
 

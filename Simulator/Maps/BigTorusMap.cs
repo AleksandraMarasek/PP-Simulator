@@ -1,14 +1,14 @@
 ﻿namespace Simulator.Maps;
 
-public class SmallTorusMap : SmallMap 
+public class BigTorusMap : BigMap
 {
-    public SmallTorusMap(int sizeX, int sizeY) : base(sizeX, sizeY) { }
+    public BigTorusMap(int sizeX, int sizeY) : base(sizeX, sizeY) { }
 
     public override Point Next(Point p, Direction d)
     {
         int xp = (p.Next(d).X + SizeX) % SizeX;
         int yp = (p.Next(d).Y + SizeY) % SizeY;
-        
+
         return new Point(xp, yp);
     }
 
@@ -21,5 +21,4 @@ public class SmallTorusMap : SmallMap
 
         return new Point(x, y);
     }
-
 }

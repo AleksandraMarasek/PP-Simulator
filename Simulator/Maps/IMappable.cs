@@ -12,4 +12,5 @@ public interface IMappable
     void InitMapAndPosition(Map map, Point point);
     char Symbol { get; }
     Point Position { get; }
+    public string ToString();
 }

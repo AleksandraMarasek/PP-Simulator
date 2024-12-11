@@ -6,6 +6,7 @@
 public abstract class Map
 {
     private readonly Rectangle _map;
+    private readonly Dictionary<Point, List<IMappable>> _fields;
     public int SizeX { get; }
     public int SizeY { get; }
     protected Map(int sizeX, int sizeY) 
@@ -17,18 +18,42 @@ public abstract class Map
             SizeY = sizeY;
 
             _map = new Rectangle(0, 0, SizeX - 1, SizeY - 1);
+            _fields = new Dictionary<Point, List<IMappable>>();
+    }
+
+    public void Add(IMappable mappable, Point position)
+    {
+        if (!Exist(position)) throw new ArgumentOutOfRangeException(nameof(position), "Position is not on the map.");
+
+        if (!_fields.ContainsKey(position)) { _fields[position] = new List<IMappable>(); }
+        _fields[position].Add(mappable);
+    }
+
+    public void Remove(IMappable mappable, Point position)
+    {
+        if (!_fields.ContainsKey(position)) return;
+
+        _fields[position].Remove(mappable);
+        if (_fields[position].Count == 0)
+        {
+            _fields.Remove(position);
         }
+    }
 
-    public abstract void Add(IMappable mappable, Point position);
-    public abstract void Remove(IMappable mappable,  Point position);
-    public abstract void Move(IMappable mappable, Point _from, Point _to);
+    public List<IMappable> At(int x, int y) => At(new Point(x, y));
 
-    public abstract List<IMappable> At(int x, int y);
-    public abstract List<IMappable> At(Point p);
+    public List<IMappable> At(Point p)
+    {
+        if (_fields.ContainsKey(p)) { return _fields[p]; }
+        return new List<IMappable>();
+    }
 
+    public void Move(IMappable mappable, Point p, Point pn)
+    {
+        Remove(mappable, p);
+        Add(mappable, pn);
+    }
 
-
-    
     /// <summary>
     /// Check if give point belongs to the map.
     /// </summary>

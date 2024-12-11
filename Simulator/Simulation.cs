@@ -102,7 +102,7 @@ public class Simulation
 
         History.SaveCurrentTurn(
             _currentTurn,
-            IMappables.ToDictionary(m => m, m => m.Position),
+            IMappables.ToDictionary(mappable => mappable, mappable => mappable.Position),
             CurrentMappable,
             direction
         );
@@ -123,9 +123,6 @@ public class Simulation
             .ToList();
     }
 
-    public void ShowTurns(List<int> turns)
-    {
-        History.ShowSpecificTurns(turns);
-    }
+    public void ShowTurns(List<int> turns) { History.ShowSpecificTurns(turns); }
 
 }
