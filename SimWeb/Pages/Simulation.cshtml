@@ -1,0 +1,79 @@
+﻿@page
+@model SimWeb.Pages.SimulationModel
+@{
+    ViewData["Title"] = "SimWeb";
+}
+
+<div id="sim">
+    <div class="map-header">
+        <form method="post" asp-page-handler="Previous">
+            <button>PREVIOUS</button>
+        </form>
+        <div class="turn">Turn @Model.Counter</div>
+        <form method="post" asp-page-handler="Next">
+            <button>NEXT</button>
+        </form>
+    </div>
+
+    @if (Model.History != null)
+    {
+        <div id="mapa">
+            @for (int i = 0; i <= Model.History.SizeY - 1; i++)
+            {
+                <div class="row">
+                    @for (int j = 0; j < Model.History.SizeX; j++)
+                    {
+                        <div class="pozycja">
+                            @{
+                                var point = new Simulator.Point(i, j);
+                                char symbol = Model.History.TurnLogs[Model.Counter].Symbols.ContainsKey(point)
+                                ? Model.History.TurnLogs[Model.Counter].Symbols[point]
+                                : ' ';
+                            }
+
+                            @switch (symbol)
+                            {
+                                case 'O':
+                                    <img src="/img/orc.png" alt="Orc" class="img"> break;
+                                case 'E':
+                                    <img src="/img/elf.png" alt="Elf" class="img"> break;
+                                case 'A':
+                                    <img src="/img/rabbit.png" alt="Rabbit" class="img"> break;
+                                case 'B':
+                                    <img src="/img/eagle.png" alt="Eagle" class="img"> break;
+                                case 'b':
+                                    <img src="/img/ostrich.png" alt="Ostrich" class="img"> break;
+                                case 'X':
+                                    <img src="/img/x.png" alt="Many" class="img"> break;
+                                default:
+                                    <span class="empty"></span> break;
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            <div>
+                @if (Model.Counter == 0)
+                {
+                    <p id="start">Pozycje startowe</p>
+                }
+                else
+                {
+                    var lastTurn = Model.History.TurnLogs[Model.Counter - 1];
+                    <p>@lastTurn.Mappable.ToString() -> @lastTurn.Move</p>
+                }
+            </div>
+
+
+
+        </div>
+
+        
+    }
+    else
+    {
+        <div class="error-message">
+            <p>Couldn't load simulation.</p>
+        </div>
+    }
+</div>
